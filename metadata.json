@@ -1,0 +1,6 @@
+{
+  "name": "Donde Nace tu Fuerza",
+  "description": "Celebración interactiva de cumpleaños 'Donde Nace tu Fuerza' - 32 años de vida y recuerdos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

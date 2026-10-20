@@ -1,0 +1,2683 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Donde Nace tu Fuerza | 32 Años de Vida</title>
+  <meta name="description" content="Homenaje interactivo a los 32 años de Lexfer: línea de tiempo, recuerdos familiares, dedicatorias, video de boda y reflexiones que forjaron su vida.">
+  <meta property="og:title" content="Donde Nace tu Fuerza | 32 Años de Vida">
+  <meta property="og:description" content="Recorrido interactivo y fotográfico en homenaje a los 32 años de Lexfer.">
+  <meta property="og:type" content="website">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Google Fonts: Cormorant Garamond, Inter, Caveat (Codificado con &amp; para W3C y VS Code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+            handwritten: ['Caveat', 'cursive'],
+          },
+          colors: {
+            amber: {
+              450: '#F59E0B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Tailwind compilado localmente por Vite -->
+  <link rel="stylesheet" href="/src/index.css">
+
+  <!-- Estilos Base Críticos Embebidos: Garantiza visualización inmediata sin importar la red -->
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #030712 !important;
+      color: #f8fafc !important;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: block;
+    }
+    /* La línea de tiempo SIEMPRE es visible: nunca pantalla vacía */
+    .timeline-node {
+      opacity: 1 !important;
+      transform: none !important;
+      display: block !important;
+      visibility: visible !important;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      border-radius: 1.25rem;
+    }
+    .smooth-image {
+      opacity: 1 !important;
+      display: block;
+    }
+    /* Botón Hero Principal Radiante y Luminoso */
+    .btn-hero-primary {
+      background: linear-gradient(135deg, #fef08a 0%, #facc15 30%, #f59e0b 75%, #d97706 100%) !important;
+      color: #0f172a !important;
+      font-weight: 800 !important;
+      border: 1px solid rgba(255, 255, 255, 0.6) !important;
+      box-shadow: 0 10px 25px -4px rgba(245, 158, 11, 0.55), 0 0 20px rgba(250, 204, 21, 0.45) !important;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-hero-primary:hover {
+      background: linear-gradient(135deg, #ffffff 0%, #fef08a 25%, #fbbf24 75%, #f59e0b 100%) !important;
+      color: #020617 !important;
+      box-shadow: 0 14px 32px -4px rgba(245, 158, 11, 0.75), 0 0 30px rgba(250, 204, 21, 0.7) !important;
+      transform: translateY(-2px) scale(1.04);
+    }
+    .btn-hero-primary:active {
+      transform: translateY(0) scale(0.97);
+    }
+    /* Marcos fotográficos para que ninguna foto salga cortada */
+    .flip-card {
+      height: 395px;
+    }
+    @media (min-width: 640px) {
+      .flip-card {
+        height: 430px;
+      }
+    }
+    .photo-frame {
+      position: relative;
+      background-color: #020617;
+      overflow: hidden;
+      border-radius: 1.25rem;
+    }
+    .photo-ambient-bg {
+      position: absolute;
+      top: -20%;
+      left: -20%;
+      width: 140%;
+      height: 140%;
+      object-fit: cover;
+      filter: blur(28px) brightness(0.38) saturate(1.2);
+      opacity: 0.7;
+      pointer-events: none;
+      transform: scale(1.15);
+      z-index: 1;
+    }
+    .photo-container-inner {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 0.75rem 3.6rem 0.75rem;
+    }
+    .photo-main-img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 0.85rem;
+      box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.12);
+      transition: transform 0.4s ease-out;
+    }
+    .group:hover .photo-main-img {
+      transform: scale(1.025);
+    }
+  </style>
+
+  <!-- Estilos Personalizados Modulares -->
+  <link rel="stylesheet" href="/css/custom.css">
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#030712] text-slate-100 font-sans antialiased selection:bg-amber-500 selection:text-slate-950 min-h-screen">
+
+  <!-- Elementos de Audio -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="assets/audio/feliz_cumpleanos_karaoke.mp3" type="audio/mpeg">
+    <source src="public/assets/audio/feliz_cumpleanos_karaoke.mp3" type="audio/mpeg">
+    <source src="/assets/audio/feliz_cumpleanos_karaoke.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="voiceNoteAudio" src="public/assets/audio/lexfer01.mp3" preload="auto"></audio>
+
+  <!-- Barra de progreso superior de lectura -->
+  <div id="scrollProgressBar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-amber-500 to-yellow-300 z-50 w-0 transition-all duration-100 ease-out pointer-events-none"></div>
+
+  <!-- Botón flotante de control de música (Karaoke Feliz Cumpleaños) -->
+  <aside id="bgMusicWidget" class="fixed top-4 right-4 sm:top-auto sm:bottom-6 sm:right-6 z-40 flex items-center gap-2">
+    <div id="audioInfo" class="hidden sm:flex items-center gap-2.5 text-xs text-amber-200/90 glass-card px-3.5 py-1.5 rounded-full shadow-xl border border-amber-500/30 backdrop-blur-md">
+      <span id="audioStatusDot" class="w-2 h-2 rounded-full bg-slate-500 transition-colors"></span>
+      <span class="font-medium text-amber-300 select-none flex items-center gap-1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-amber-400 inline">
+          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+        Feliz Cumpleaños (Karaoke)
+      </span>
+      <div class="flex items-center gap-1.5 pl-2 border-l border-amber-500/25">
+        <input 
+          id="bgMusicVolSlider" 
+          type="range" 
+          min="0" 
+          max="100" 
+          value="20" 
+          class="w-16 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
+          title="Volumen muy suave y bajo (20%)"
+          aria-label="Volumen música de fondo"
+        >
+        <span id="bgMusicVolLabel" class="text-[10px] text-amber-400/90 font-mono w-6 text-right select-none">20%</span>
+      </div>
+    </div>
+    <button type="button" id="audioToggleBtn" class="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full glass-card border border-amber-500/40 text-amber-400 shadow-xl hover:scale-105 active:scale-95 transition-transform" aria-label="Reproducir música de fondo (Feliz Cumpleaños Karaoke)" title="Reproducir música de fondo">
+      <span id="audioIconContainer" class="flex items-center justify-center pointer-events-none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>
+      </span>
+    </button>
+  </aside>
+
+  <!-- Navegación lateral (Desktop) -->
+  <nav class="hidden lg:flex fixed left-6 top-1/2 -translate-y-1/2 z-40 flex-col gap-3.5" aria-label="Navegación de capítulos">
+    <a href="#hero" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">Inicio</span>
+    </a>
+    <a href="#capitulo-1" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">I: El Origen (1994)</span>
+    </a>
+    <a href="#capitulo-2" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">II: La Forja &amp; Audio</span>
+    </a>
+    <a href="#capitulo-3" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">III: Pasión &amp; Hermandad</span>
+    </a>
+    <a href="#capitulo-4" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">IV: Conquistas &amp; Metas</span>
+    </a>
+    <a href="#capitulo-5" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">V: Tu Carro &amp; Al Volante con papá</span>
+    </a>
+    <a href="#capitulo-6" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">VI: Graduación Universidad</span>
+    </a>
+    <a href="#capitulo-7" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">VII: La Boda (Video)</span>
+    </a>
+    <a href="#capitulo-8" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">VIII: Comparador 1994 vs 2026</span>
+    </a>
+    <a href="#vault" class="group flex items-center gap-3 text-xs text-slate-400 hover:text-amber-400 transition-colors">
+      <span class="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-amber-400 group-hover:scale-125 transition-all"></span>
+      <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">32 Años</span>
+    </a>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header id="hero" class="relative min-h-[92vh] sm:min-h-screen flex flex-col items-center justify-between text-center px-4 sm:px-6 py-4 sm:py-6 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-96 h-64 sm:h-96 bg-amber-500/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/3 left-1/3 w-56 sm:w-80 h-56 sm:h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="w-full h-1"></div>
+
+    <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center justify-center space-y-3 sm:space-y-4 my-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300 text-[11px] sm:text-xs tracking-wider uppercase font-semibold">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        20 de Octubre &bull; Celebrando tus 32 Años
+      </div>
+
+      <h1 class="font-serif text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight">
+        Donde Nace tu <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 italic">Fuerza</span>
+      </h1>
+
+      <p class="text-xs sm:text-sm md:text-base text-slate-300 font-light max-w-lg mx-auto leading-relaxed px-2">
+        Cada recuerdo, cada desafío superado, la unión de la boda y las palabras escritas detrás de cada foto son el cimiento inquebrantable de quien eres hoy.
+      </p>
+
+      <div class="pt-1 w-full sm:w-auto flex flex-wrap justify-center items-center gap-3">
+        <a 
+          href="#capitulo-1" 
+          id="btnComenzarRecorrido"
+          class="btn-hero-primary w-full sm:w-auto px-7 py-3.5 rounded-full text-slate-950 font-extrabold text-sm tracking-wide shadow-xl shadow-amber-500/30 hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-2 group cursor-pointer"
+          style="background: linear-gradient(135deg, #fef08a 0%, #facc15 35%, #f59e0b 80%, #d97706 100%) !important; color: #0f172a !important; border: 1px solid rgba(255, 255, 255, 0.65) !important; box-shadow: 0 10px 25px -4px rgba(245, 158, 11, 0.55), 0 0 20px rgba(250, 204, 21, 0.45) !important;"
+        >
+          <span class="font-extrabold text-slate-950">Comenzar el recorrido</span>
+          <i data-lucide="arrow-down" class="w-4 h-4 stroke-[2.75] text-slate-950 group-hover:translate-y-0.5 transition-transform"></i>
+        </a>
+        <a 
+          href="#capitulo-7" 
+          id="btnVerVideoBoda"
+          class="w-full sm:w-auto px-6 py-3.5 rounded-full glass-card border border-amber-500/40 text-amber-300 hover:text-white hover:bg-amber-500/20 hover:border-amber-400 font-semibold text-sm transition-all inline-flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:scale-105 active:scale-95"
+        >
+          <i data-lucide="film" class="w-4 h-4 text-amber-400"></i>
+          <span>Ver Video de la Boda</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="relative z-10 flex flex-col items-center gap-1 text-slate-400 animate-bounce pb-2">
+      <span class="text-[10px] tracking-widest uppercase font-medium">Desliza</span>
+      <i data-lucide="chevron-down" class="w-4 h-4 text-amber-400"></i>
+    </div>
+  </header>
+
+  <!-- LÍNEA DE TIEMPO CENTRAL -->
+  <main class="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-14 space-y-10 sm:space-y-16">
+
+    <!-- ========================================================================== -->
+    <!-- CAPÍTULO 1: 1994 - EL ORIGEN DEL IMPULSO (2 TARJETAS 3D) -->
+    <!-- ========================================================================== -->
+    <section id="capitulo-1" class="timeline-node relative glass-card p-4 sm:p-7 rounded-3xl border border-slate-800/80 shadow-2xl space-y-5">
+      <div class="max-w-2xl space-y-1.5">
+        <div class="inline-block px-2.5 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          Capítulo I &bull; 20 de Octubre de 1994
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white">El Origen del Impulso</h2>
+        <p class="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+          Ese 20 de octubre cambió nuestra historia para siempre. Tu llegada encendió un brillo imborrable en la familia; desde tus primeros pasos nos enseñaste la pureza del asombro y el poder de una sonrisa sincera.
+        </p>
+        <div class="flex flex-wrap items-center gap-2 text-xs text-amber-200/80 pt-1">
+          <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Casa Familiar</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Octubre 1994</span>
+        </div>
+      </div>
+
+      <!-- Grilla con 2 Tarjetas Flip 3D -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+        
+        <!-- Tarjeta 1A: Lexfer Bebé -->
+        <div class="flip-scene">
+          <div id="card-1a" class="flip-card">
+            
+            <!-- Frente 1A -->
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-1a')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer1_bebecito.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-1a"
+                  src="assets/fotos/Lexfer1_bebecito.jpg" 
+                  alt="Lexfer recién nacido en 1994" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-1a', 'El Comienzo de Todo (1994)', 'Aquel 20 de octubre en que llegaste a nuestras vidas para iluminarlo todo con tu mirada.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Nuestros primeros pasos juntos"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-1a')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 1A -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-1a')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">1994 &bull; RAÍCES</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">I</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Hace 32 años, un 20 de octubre, te abrazamos por primera vez con la certeza de que tu destino esta marcado por la grandeza.Que la nobleza con la que creciste y la fuerza de tu corazón sigan guiando cada uno de tus logros"
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Mamá &amp; Papá</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-1a')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 1B: Papá y Yo -->
+        <div class="flip-scene">
+          <div id="card-1b" class="flip-card">
+            
+            <!-- Frente 1B -->
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-1b')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer1_Papa_y_Yo2004.JPG" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-1b"
+                  src="assets/fotos/Lexfer1_Papa_y_Yo2004.JPG" 
+                  alt="Papá, Mamá y Yo" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-1b', 'Papá, Mamá y Yo (2004)', 'La complicidad, la alegría compartida y el amor de familia que siempre te acompaña.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Familia y complicidad"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-1b')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 1B -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-1b')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2004 &bull; AMOR DE FAMILIA</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">II</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Tu alegría pícara y esa mirada brillante siempre han sido el motor de nuestro hogar. Creciste sabiendo que siempre tendrás en nosotros tu mayor apoyo y refugio incondicional."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Siempre contigo, Papá &amp; Mamá</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-1b')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================== -->
+    <!-- CAPÍTULO 2: LA FORJA DE LA VOLUNTAD (CON AUDIO: lexfer01.mp3) -->
+    <!-- ========================================================================== -->
+    <section id="capitulo-2" class="timeline-node relative glass-card p-4 sm:p-7 rounded-3xl border border-slate-800/80 shadow-2xl space-y-5">
+      <div class="max-w-2xl space-y-1.5">
+        <div class="inline-block px-2.5 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          Capítulo II &bull; Crecimiento &amp; Pasión
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white">La Forja de la Voluntad</h2>
+        <p class="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+          Los años en que fuiste construyendo tu propio criterio, tus pasiones y tu temple. Esas tardes de risas y enojos, proyectos e ilusiones demostraron que tu disciplina y nobleza son capaces de transformar cualquier obstáculo en victoria.
+        </p>
+
+        <!-- Reproductor nota de voz interactiva: lexfer01.mp3 -->
+        <div class="glass-card p-4 sm:p-5 rounded-2xl border border-amber-500/30 bg-slate-900/90 shadow-xl space-y-3.5 max-w-xl mt-3">
+          <div class="flex items-center gap-3.5">
+            <button 
+              type="button" 
+              id="voiceNoteBtn" 
+              onclick="toggleVoiceNote()" 
+              class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-slate-950 flex items-center justify-center transition-all flex-shrink-0 shadow-lg border border-amber-500/40 hover:scale-105 active:scale-95" 
+              aria-label="Reproducir mensaje de voz de familia"
+              title="Reproducir mensaje"
+            >
+              <span id="voiceNoteIconContainer" class="flex items-center justify-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-0.5"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+              </span>
+            </button>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs sm:text-sm font-semibold text-slate-100 truncate flex items-center gap-1.5">
+                  <span id="voiceNoteStatusDot" class="w-2 h-2 rounded-full bg-amber-500"></span>
+                  Mensaje Especial de Familia
+                </span>
+                <span id="voiceNoteTime" class="text-[10px] sm:text-xs font-mono text-amber-400 font-medium">00:00 / --:--</span>
+              </div>
+              <p id="voiceNoteStatusText" class="text-[11px] text-slate-400 truncate mt-0.5">Principe feliz cumpleaños &bull; Bendiciones y amor incondicional</p>
+            </div>
+          </div>
+
+          <!-- Transcripción / Mensaje de Familia -->
+          <div class="p-3 sm:p-3.5 rounded-xl bg-slate-950/70 border border-amber-500/25 text-xs sm:text-[13px] text-slate-200 leading-relaxed font-serif relative shadow-inner">
+            <div class="flex items-center gap-1.5 text-amber-400 font-sans text-[11px] font-semibold mb-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span>Mensaje Especial de Familia:</span>
+            </div>
+            <p class="italic text-slate-200">
+              «Principe feliz cumpleaños que Dios y la vida bendigan cada paso de tu camino tu hogar y tus sueños Siempre que necesites recordar de dónde vienes aquí estará tu familia incondicional Feliz cumpleaños Lexfer.»
+            </p>
+          </div>
+
+          <!-- Barra de progreso interactiva (hacer clic para avanzar/retroceder) -->
+          <div 
+            id="voiceNoteProgressContainer" 
+            class="w-full bg-slate-800 hover:bg-slate-700/80 rounded-full h-2 cursor-pointer relative overflow-hidden transition-all group"
+            title="Haz clic para avanzar o retroceder el audio"
+          >
+            <div id="voiceNoteProgressBar" class="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 h-full w-0 rounded-full transition-all duration-75"></div>
+          </div>
+
+          <!-- Controles de Volumen y Selector de Archivo -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1.5 border-t border-slate-800/80 text-xs">
+            <!-- Control de Volumen de este audio -->
+            <div class="flex items-center gap-2 bg-slate-950/70 px-3 py-1.5 rounded-xl border border-slate-800">
+              <button 
+                type="button" 
+                id="voiceNoteMuteBtn" 
+                onclick="toggleVoiceNoteMute()"
+                class="text-slate-400 hover:text-amber-400 transition-colors p-0.5 flex items-center justify-center"
+                title="Silenciar / Activar volumen"
+                aria-label="Silenciar o activar volumen"
+              >
+                <span id="voiceNoteMuteIconContainer" class="flex items-center justify-center pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                </span>
+              </button>
+              <input 
+                type="range" 
+                id="voiceNoteVolumeSlider" 
+                min="0" 
+                max="100" 
+                value="100" 
+                oninput="setVoiceNoteVolume(this.value)"
+                class="w-20 sm:w-28 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                aria-label="Volumen del mensaje especial"
+                title="Ajustar volumen"
+              >
+              <span id="voiceNoteVolumeLabel" class="text-[10px] sm:text-[11px] font-mono text-amber-300/90 w-8 text-right">100%</span>
+            </div>
+
+            <!-- Indicador estático del archivo de audio local -->
+            <div id="voiceNoteSourceBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 shadow-sm" title="public/assets/audio/lexfer01.mp3">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>
+              <span class="font-sans font-medium text-emerald-200">Carga Automática Directa :</span>
+              <code class="text-emerald-300 font-bold">public/assets/audio/lexfer01.mp3</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grilla con 4 Tarjetas Flip 3D -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-5 md:gap-6">
+        
+        <!-- Tarjeta 2A: Sonrisa 2004 -->
+        <div class="flip-scene">
+          <div id="card-2a" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-2a')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer4_2004A.JPG" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-2a"
+                  src="assets/fotos/Lexfer4_2004A.JPG" 
+                  alt="Sonrisa y Alegría - Lexfer" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-2a', 'Sonrisa y Energía (2004)', 'La chispa contagiosa y la calidez que siempre ha llenado cada rincón del hogar.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Luz propia y carisma"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-2a')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-2a')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2004 &bull; ALEGRÍA</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">III</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Tu sonrisa siempre ha tenido el don de alegrar nuestros días. Desde pequeño demostraste una bondad genuina y un espíritu despierto que nos llena de admiración."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Tan bello mi principe</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-2a')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 2B: El beso a Mamá -->
+        <div class="flip-scene">
+          <div id="card-2b" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-2b')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer10_yo_2004.JPG" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-2b"
+                  src="assets/fotos/Lexfer10_yo_2004.JPG" 
+                  alt="El abrazo más dulce" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-2b', 'El Beso Más Dulce (2004)', 'Momentos grabados en el alma: el cariño infinito hacia mamá y los lazos de familia.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Ternura y amor a mamá"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-2b')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-2b')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2004 &bull; TERNURA</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">IV</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Ese beso espontáneo y tu abrazo protector son los recuerdos que más atesoro. Nunca pierdas esa ternura y nobleza de corazón que te hacen un hijo excepcional."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Dios te Bendiga Siempre...-Tu Mamá y Papá</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-2b')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 2C: Cumpleaños 2009 -->
+        <div class="flip-scene">
+          <div id="card-2c" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-2c')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer16_Cumpleanos_2009.JPG" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-2c"
+                  src="assets/fotos/Lexfer16_Cumpleanos_2009.JPG" 
+                  alt="Cumpleaños Lexfer 2009" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-2c', 'Celebrando la Vida (2009)', '¡Feliz Cumpleaños Lexfer! Una tarde de risas, pastel y sueños que hoy se hacen realidad.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"¡Feliz Cumpleaños Lexfer!"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-2c')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-2c')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2009 &bull; CELEBRACIÓN</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">V</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Celebrar tu vida siempre ha sido el mayor motivo de alegría en nuestra familia. Verte crecer con templanza y metas firmes nos llena de un orgullo infinito."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Tu Familia siempre contigo</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-2c')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 2D: Vacaciones 2009 (Lexfer14_2009_Vacaciones) -->
+        <div class="flip-scene">
+          <div id="card-2d" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-2d')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer14_2009_Vacaciones.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-2d"
+                  src="assets/fotos/Lexfer14_2009_Vacaciones.jpg" 
+                  alt="Vacaciones y Juventud - Lexfer 2009" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-2d', 'Vacaciones y Juventud (2009)', 'Tardes doradas de risas, descanso y hermandad compartidas con seres queridos.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Risas, descanso y unión"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-2d')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-2d')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2009 &bull; VACACIONES &amp; JUVENTUD</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">V-B</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "En cada vacaciones momentos compartidos, tu simpatía, sencillez y calidez hicieron que los momentos simples se convirtieran en recuerdos imborrables. Es un regalo celebrar tu camino de vida."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Con todo cariño tus hermanos trillizos</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-2d')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================== -->
+    <!-- CAPÍTULO 3 (NUEVO): PASIONES, DEPORTE Y HERMANDAD -->
+    <!-- ========================================================================== -->
+    <section id="capitulo-3" class="timeline-node relative glass-card p-4 sm:p-7 rounded-3xl border border-slate-800/80 shadow-2xl space-y-5">
+      <div class="max-w-2xl space-y-1.5">
+        <div class="inline-block px-2.5 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          Capítulo III &bull; Juventud, Deportes &amp; Amistad
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white">Pasiones, Deporte y Hermandad</h2>
+        <p class="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+          Esos años dorados donde cada partido de fútbol era una lección de carácter, trabajo en equipo y entrega absoluta. Entre jugadas, risas con hermanos y aventuras juveniles se forjó un corazón valiente y leal.
+        </p>
+        <div class="flex items-center gap-2 text-xs text-amber-200/80 pt-1">
+          <span class="flex items-center gap-1"><i data-lucide="trophy" class="w-3.5 h-3.5 text-amber-400"></i> Garra en la Cancha</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5 text-amber-400"></i> Lazos de Hermandad</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="sun" class="w-3.5 h-3.5 text-amber-400"></i> Playa y Libertad</span>
+        </div>
+      </div>
+
+      <!-- Grilla con 4 Tarjetas Flip 3D (Fotos Reales de Fútbol, Hermandad y Playa) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-5 md:gap-6">
+        
+        <!-- Tarjeta 3A: Fútbol (Lexfer5_Jugando_Football2007.JPG) -->
+        <div class="flip-scene">
+          <div id="card-3a" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-3a')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer5_Jugando_Football2007.JPG" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-3a"
+                  src="assets/fotos/Lexfer5_Jugando_Football2007.JPG" 
+                  alt="Lexfer jugando fútbol en 2007" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-3a', 'Pasión por el Fútbol (2007)', 'Coraje, entrega y disciplina en cada jugada: la determinación de darlo todo en la cancha.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Garra y espíritu deportivo"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-3a')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-3a')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2007 &bull; DEPORTE &amp; ENTREGA</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">VI</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Verte correr en la cancha persiguiendo cada balón con pasión nos demostró tu temple. Esa misma fuerza y perseverancia son las que hoy te hacen triunfar ante cualquier desafío de la vida."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— pasión por el football</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-3a')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 3B: Hermandad (Lexfer7_Trillizos_2006.JPG) -->
+        <div class="flip-scene">
+          <div id="card-3b" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-3b')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer7_Trillizos_2006.JPG" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-3b"
+                  src="assets/fotos/Lexfer7_Trillizos_2006.JPG" 
+                  alt="Hermanos y complicidad" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-3b', 'Hermandad y Complicidad (2006)', 'Risas, travesuras y la certeza de que entre hermanos siempre habrá un hombro seguro.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Hermanos y lealtad eterna"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-3b')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-3b')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2006 &bull; HERMANDAD</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">VII</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "La verdadera riqueza de la vida son los afectos compartidos. Ver la unión sincera y el compañerismo con tus hermanos, los trillizos , ...es el legado de amor más hermoso que podemos contemplar."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Familia unida por siempre</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-3b')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 3C: Espontaneidad (Lexfer2_2007_Gracioso.JPG) -->
+        <div class="flip-scene">
+          <div id="card-3c" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-3c')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer2_2007_Gracioso.JPG" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-3c"
+                  src="assets/fotos/Lexfer2_2007_Gracioso.JPG" 
+                  alt="Espontaneidad y risas 2007" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-3c', 'Alegría y Chispa (2007)', 'Tu autenticidad y alegría desbordante: momentos donde la risa era la única regla.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Chispa viva y autenticidad"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-3c')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-3c')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2007 &bull; ESPONTANEIDAD</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">VIII</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Tu ingenio, tu chispa y esa sonrisa franca iluminan cualquier día gris. Que nunca pierdas la frescura, el optimismo y la nobleza de tu alma."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Tu Familia te bendice</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-3c')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 3D: Playa (Lexfer15_2010_Playa.jpg) -->
+        <div class="flip-scene">
+          <div id="card-3d" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-3d')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer15_2010_Playa.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-3d"
+                  src="assets/fotos/Lexfer15_2010_Playa.jpg" 
+                  alt="Lexfer en la playa 2010" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-3d', 'Aventuras en la Playa (2010)', 'Días dorados de sol, brisa y mar: la alegría, libertad y vitalidad de tu juventud.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Aventuras de verano y libertad"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-3d')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-3d')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2010 &bull; LIBERTAD &amp; PLAYA</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">VIII-B</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "El mar, la brisa marina y esa energía radiante de juventud.Ya es 2010 y te estas pareciendo lo que eres hoy en dia.Que ese espíritu libre, alegre y aventurero siga siendo siempre el motor de tus grandes metas."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Con inmenso cariño</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-3d')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================== -->
+    <!-- CAPÍTULO 4: LA CONQUISTA DEL CAMINO (LOGROS ACADÉMICOS Y MADUREZ) -->
+    <!-- ========================================================================== -->
+    <section id="capitulo-4" class="timeline-node relative glass-card p-4 sm:p-7 rounded-3xl border border-slate-800/80 shadow-2xl space-y-5">
+      <div class="max-w-2xl space-y-1.5">
+        <div class="inline-block px-2.5 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          Capítulo IV &bull; Madurez &amp; Metas
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white">La Conquista del Camino</h2>
+        <p class="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+          Tus logros no han sido fruto del azar: son la cosecha legítima de tu honestidad, perseverancia y talento. Verte hoy actuar con seguridad y liderazgo es la mayor satisfacción que podemos sentir.
+        </p>
+        <div class="flex items-center gap-2 text-xs text-amber-200/80 pt-1">
+          <span class="flex items-center gap-1"><i data-lucide="award" class="w-3.5 h-3.5 text-amber-400"></i> Cosecha de Éxitos</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="compass" class="w-3.5 h-3.5 text-amber-400"></i> Rumbo Seguro</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="music" class="w-3.5 h-3.5 text-amber-400"></i> Arte &amp; Piano</span>
+        </div>
+      </div>
+
+      <!-- Grilla con 4 Tarjetas Flip 3D (Logros, Formación y Sensibilidad Artística) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-5 md:gap-6">
+        
+        <!-- Tarjeta 4A: Graduación Bachiller (Lexfer18_Graduacion_Bachiller.jpg) -->
+        <div class="flip-scene">
+          <div id="card-4a" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-4a')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer18_Graduacion_Bachiller.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-4a"
+                  src="assets/fotos/Lexfer18_Graduacion_Bachiller.jpg" 
+                  alt="Graduación y logros de Lexfer" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-4a', 'Graduación y Metas Conquistadas', 'La satisfacción inmensa de ver tus sueños transformados en hechos reales con disciplina y entrega.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Orgullo inquebrantable"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-4a')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-4a')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">COSECHA &bull; ÉXITO</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">IX</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Cada triunfo tuyo lo celebramos como propio porque conocemos las batallas silenciosas y el empeño que has puesto. Que nunca dejes de creer en ti."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Te amamos siempre</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-4a')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 4B: Vacaciones y Temple (Lexfer9_Vacac_2009.JPG) -->
+        <div class="flip-scene">
+          <div id="card-4b" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-4b')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer9_Vacac_2009.JPG" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-4b"
+                  src="assets/fotos/Lexfer9_Vacac_2009.JPG" 
+                  alt="Madurez y plenitud" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-4b', 'Plenitud y Temple (2009)', 'Un hombre íntegro, ejemplo de rectitud y fuente constante de orgullo familiar.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Firmeza y futuro"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-4b')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-4b')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">MADUREZ &bull; VIDA</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">X</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Llegar a este momento con tu integridad y corazón es una bendición infinita. Sigue brillando con luz propia; tus raíces siempre serán tu refugio seguro."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Bendiciones Siempre </p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-4b')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 4C: Secundaria y Cimientos (Lexfer6_Fran_Secundaria.JPG) -->
+        <div class="flip-scene">
+          <div id="card-4c" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-4c')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer6_Fran_Secundaria.JPG" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-4c"
+                  src="assets/fotos/Lexfer6_Fran_Secundaria.JPG" 
+                  alt="Secundaria y formación" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-4c', 'Cimientos de la Secundaria', 'Etapas que afinaron el carácter, las amistades de vida y la claridad de tus metas.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Carácter y convicción"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-4c')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-4c')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">FORMACIÓN &bull; VALORES</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XI</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Construiste paso a paso los valores que hoy te definen: lealtad, caballerosidad y entereza. Eres el ejemplo vivo de perseverar con honradez."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Con admiración infinita</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-4c')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 4D: Piano y Sensibilidad (Lexfer13_Piano.jpg) -->
+        <div class="flip-scene">
+          <div id="card-4d" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-4d')">
+              <!-- Capa ambiental desenfocada con tonos de la foto -->
+              <img src="assets/fotos/Lexfer13_Piano.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <!-- Foto principal nítida, 100% íntegra, sin recortes -->
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-4d"
+                  src="assets/fotos/Lexfer13_Piano.jpg" 
+                  alt="Lexfer al piano interpretando música" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-4d', 'Sensibilidad, Arte & Piano', 'La armonía y disciplina de tu espíritu: interpretar melodías que tocan el corazón y enriquecen el alma.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Sensibilidad, arte y armonía"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-4d')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-4d')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">ARTE &bull; SENSIBILIDAD</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XI-B</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "La música siempre ha sido el reflejo de la nobleza y delicadeza de tu corazón. Que jamás falte la armonía, la creatividad y esa hermosa sensibilidad en tu vida.Momentos de relax "
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Orgullosos de tu esencia</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-4d')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================== -->
+    <!-- CAPÍTULO 5 (NUEVO): SU CARRO NUEVO & AMIGOS (AUTONOMÍA Y LOGROS) -->
+    <!-- ========================================================================== -->
+    <section id="capitulo-5" class="timeline-node relative glass-card p-4 sm:p-7 rounded-3xl border border-slate-800/80 shadow-2xl space-y-5">
+      <div class="max-w-2xl space-y-1.5">
+        <div class="inline-block px-2.5 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          Capítulo V &bull; Autonomía, Nuevas Rutas &amp; Amistad
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white">Nuevos Caminos: Tu Carro &amp; Primeros pasos al Volante con papá</h2>
+        <p class="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+          Tener tu propio carro es el símbolo tangible de tu independencia, esfuerzo constante y madurez. Cada kilómetro recorrido, cada viaje compartido y cada encuentro en la cancha con tus grandes amigos son el reflejo de una vida construida con paso firme y corazón leal.
+        </p>
+        <div class="flex items-center gap-2 text-xs text-amber-200/80 pt-1 flex-wrap">
+          <span class="flex items-center gap-1"><i data-lucide="film" class="w-3.5 h-3.5 text-amber-400"></i> Video: Al Volante</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="car" class="w-3.5 h-3.5 text-amber-400"></i> Tu Primer Carro</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5 text-amber-400"></i> Amigos de la oficina: Pirámide </span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i> Enero - Febrero 2023</span>
+        </div>
+      </div>
+
+      <!-- ==================================================================== -->
+      <!-- VIDEO ESPECIAL: APRENDIENDO AL VOLANTE (2 DE ENERO DE 2023) -->
+      <!-- ==================================================================== -->
+      <div id="drivingVideoContainer" class="video-wrapper video-glow-ring max-w-4xl mx-auto relative group overflow-hidden rounded-2xl bg-slate-950 border border-amber-500/30 shadow-2xl">
+        
+        <!-- Elemento de Video HTML5 con fondo ambiental -->
+        <div class="relative w-full bg-black/95 flex items-center justify-center overflow-hidden min-h-[320px] sm:min-h-[420px]">
+          <!-- Capa ambiental desenfocada detrás del video -->
+          <img 
+            src="assets/video/aprendiendo_poster.jpg" 
+            alt="aprendiendo a conducir con papá" 
+            class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-35 scale-110 pointer-events-none" 
+            aria-hidden="true"
+          />
+          <div class="absolute inset-0 bg-slate-950/40 pointer-events-none z-[1]"></div>
+
+          <video 
+            id="drivingVideo" 
+            class="relative z-[2] max-h-[480px] w-auto max-w-full object-contain cursor-pointer shadow-2xl rounded-lg"
+            src="assets/video/Lexfer19_20230102_aprendiendo.mp4"
+            poster="assets/video/aprendiendo_poster.jpg"
+            playsinline 
+            preload="metadata"
+            onclick="toggleDrivingVideo()"
+          >
+            <source src="assets/video/Lexfer19_20230102_aprendiendo.mp4" type="video/mp4">
+            <source src="/assets/video/Lexfer19_20230102_aprendiendo.mp4" type="video/mp4">
+            <source src="public/assets/video/Lexfer19_20230102_aprendiendo.mp4" type="video/mp4">
+            Tu navegador no soporta el formato de video.
+          </video>
+
+          <!-- Mini barra de avance en el borde inferior del video -->
+          <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-black/60 z-10 pointer-events-none">
+            <div id="drivingVideoOverlayProgressBar" class="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 w-0 transition-all duration-75 shadow-[0_0_8px_rgba(245,158,11,0.8)]"></div>
+          </div>
+
+          <!-- Overlay con botón Play estilizado sobre el video -->
+          <div 
+            id="drivingVideoPlayOverlay" 
+            onclick="toggleDrivingVideo()"
+            class="absolute inset-0 bg-slate-950/60 backdrop-blur-[2px] flex flex-col items-center justify-center gap-3 transition-opacity duration-300 cursor-pointer z-20 group"
+          >
+            <div id="drivingOverlayPlayBtn" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 flex items-center justify-center shadow-2xl group-hover:scale-110 active:scale-95 transition-all shadow-amber-500/30">
+              <span id="drivingOverlayPlayIconContainer" class="flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 sm:w-10 sm:h-10 ml-1 fill-slate-950"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+              </span>
+            </div>
+            <div class="text-center px-4">
+              <p class="font-serif text-lg sm:text-2xl font-bold text-white tracking-wide drop-shadow">Primeros Pasos al Volante con papá</p>
+              <p class="text-xs sm:text-sm text-amber-200/90 font-light drop-shadow">2 de Enero de 2023 &bull; Haz clic para reproducir el video</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Control Personalizada -->
+        <div class="p-3 sm:p-4 bg-slate-950/95 border-t border-slate-800 space-y-3 relative z-30">
+          
+          <!-- SECCIÓN: BARRA DE AVANCE Y LÍNEA DE TIEMPO DEL VIDEO -->
+          <div class="space-y-1.5 bg-slate-900/80 p-2.5 sm:p-3 rounded-2xl border border-amber-500/30 shadow-lg">
+            <!-- Fila superior de información -->
+            <div class="flex items-center justify-between text-xs px-1 select-none">
+              <span class="flex items-center gap-2 text-amber-300 font-semibold text-xs sm:text-sm">
+                <span class="flex h-2 w-2 relative">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                <span>Barra de Avance</span>
+                <span class="text-[10px] sm:text-xs text-slate-400 font-normal hidden sm:inline">&bull; 2 Ene 2023 &bull; 1:02 min</span>
+              </span>
+              <div class="flex items-center gap-1.5 font-mono text-xs sm:text-sm text-amber-300 bg-slate-950 px-2.5 py-0.5 rounded-lg border border-amber-500/20 shadow-inner">
+                <span id="drivingVideoCurrentTimeDisplay" class="font-bold">0:00</span>
+                <span class="text-slate-500 font-normal">/</span>
+                <span id="drivingVideoDurationDisplay" class="text-slate-300">1:02</span>
+              </div>
+            </div>
+
+            <!-- Contenedor del Scrubber Interactivo -->
+            <div 
+              id="drivingVideoProgressContainer" 
+              class="relative w-full h-7 flex items-center cursor-pointer select-none group py-1"
+              title="Haz clic o arrastra para moverte en el video"
+            >
+              <div class="w-full h-3 rounded-full bg-slate-950 border border-slate-700/80 shadow-inner overflow-hidden relative">
+                <div id="drivingVideoBufferBar" class="absolute top-0 bottom-0 left-0 bg-slate-800/80 w-0 transition-all duration-300"></div>
+                <div id="drivingVideoProgressBar" class="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 w-0 h-full rounded-full transition-all duration-75 shadow-[0_0_12px_rgba(245,158,11,0.7)]"></div>
+              </div>
+              <div 
+                id="drivingVideoProgressThumb" 
+                class="absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 border-2 border-slate-950 shadow-lg shadow-amber-500/60 group-hover:scale-125 transition-transform duration-75 pointer-events-none z-20 flex items-center justify-center ring-2 ring-amber-400/50"
+              >
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-950"></div>
+              </div>
+              <div 
+                id="drivingVideoSeekTooltip" 
+                class="absolute -top-7 -translate-x-1/2 bg-slate-950 text-amber-300 font-mono text-[10px] px-2 py-0.5 rounded border border-amber-500/50 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-30 whitespace-nowrap hidden sm:block"
+              >
+                0:00
+              </div>
+              <input 
+                type="range" 
+                id="drivingVideoSeekInput" 
+                min="0" 
+                max="100" 
+                value="0" 
+                step="0.05" 
+                oninput="onDrivingVideoSeekInput(this.value)" 
+                onchange="onDrivingVideoSeekChange(this.value)" 
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30" 
+                aria-label="Barra de avance del video de aprendizaje al volante" 
+                title="Desliza para moverte por el video"
+              >
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <!-- Grupo Izquierdo: Play/Pause, Rewind/Forward, Tiempo y Estado -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+              <button 
+                type="button" 
+                id="drivingVideoPlayBtn" 
+                onclick="toggleDrivingVideo()" 
+                class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-slate-950 flex items-center justify-center transition-all shadow border border-amber-500/40 hover:scale-105 active:scale-95 flex-shrink-0"
+                aria-label="Reproducir o pausar video"
+                title="Reproducir / Pausar"
+              >
+                <span id="drivingVideoPlayIconContainer" class="flex items-center justify-center pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-0.5"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                </span>
+              </button>
+              <button 
+                type="button" 
+                onclick="skipDrivingVideo(-10)" 
+                class="hidden sm:inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-400 hover:border-amber-500/40 transition-colors text-xs"
+                title="Retroceder 10 segundos"
+              >
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              </button>
+              <button 
+                type="button" 
+                onclick="skipDrivingVideo(10)" 
+                class="hidden sm:inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-400 hover:border-amber-500/40 transition-colors text-xs"
+                title="Adelantar 10 segundos"
+              >
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-xs">
+                <span id="drivingVideoStatusDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+                <span id="drivingVideoStatusText" class="text-slate-300 font-medium text-[11px]">En pausa</span>
+              </div>
+            </div>
+
+            <!-- Grupo Derecho: Volumen, Pantalla Completa -->
+            <div class="flex items-center gap-2 sm:gap-3">
+              <div class="flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-1 rounded-full border border-slate-800">
+                <button 
+                  type="button" 
+                  id="drivingVideoMuteBtn" 
+                  onclick="toggleDrivingVideoMute()" 
+                  class="text-slate-300 hover:text-amber-400 transition-colors"
+                  title="Silenciar / Activar sonido"
+                  aria-label="Silenciar o activar sonido"
+                >
+                  <span id="drivingVideoMuteIconContainer" class="flex items-center justify-center">
+                    <i data-lucide="volume-2" class="w-4 h-4"></i>
+                  </span>
+                </button>
+                <input 
+                  type="range" 
+                  id="drivingVideoVolumeSlider" 
+                  min="0" 
+                  max="1" 
+                  step="0.05" 
+                  value="0.85" 
+                  oninput="setDrivingVideoVolume(this.value)"
+                  class="w-14 sm:w-16 h-1 bg-slate-700 accent-amber-400 rounded-lg cursor-pointer"
+                  title="Volumen del video"
+                  aria-label="Volumen del video"
+                >
+              </div>
+
+              <button 
+                type="button" 
+                id="drivingVideoFullscreenBtn" 
+                onclick="toggleDrivingVideoFullscreen()" 
+                class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-400 hover:border-amber-500/40 flex items-center justify-center transition-colors"
+                title="Pantalla completa"
+                aria-label="Pantalla completa"
+              >
+                <i data-lucide="maximize" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pie descriptivo del video -->
+        <div class="px-4 py-2.5 bg-slate-900/60 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+          <span class="flex items-center gap-1.5 text-amber-200/90 font-medium">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+            2 de Enero de 2023 &bull; «Aprendiendo al volante»
+          </span>
+          <span class="text-stone-400 text-[11px] italic hidden sm:inline">
+            El prólogo de una conquista sobre ruedas
+          </span>
+        </div>
+      </div>
+
+      <!-- Grilla con 2 Tarjetas Flip 3D -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6 max-w-4xl mx-auto">
+        
+        <!-- Tarjeta 5A: Tu Carro Nuevo (Lexfer19_Turuk-20230220.jpg) -->
+        <div class="flip-scene">
+          <div id="card-5a" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-5a')">
+              <img src="assets/fotos/Lexfer19_Turuk-20230220.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-5a"
+                  src="assets/fotos/Lexfer19_Turuk-20230220.jpg" 
+                  alt="Lexfer estrenando su carro nuevo (Turuk)" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                  
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-5a', 'Su Carro Nuevo &bull; Febrero 2023', 'El fruto de tu dedicación y trabajo honrado: conduciendo hacia tus más grandes metas con la frente en alto y el corazón lleno de gratitud.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Mi Carro Nuevo (Turuk Merú) &bull; 2023"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-5a')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 5A -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-5a')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2023 &bull; INDEPENDENCIA &bull; SU CARRO</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XII</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Verte al volante de tu propio carro no es solo verte conducir: es ver el fruto de cada hora de esfuerzo, tu disciplina de trabajo y la independencia que te ganaste con honor y constancia. Que cada ruta te lleve a conquistar nuevos horizontes."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Orgullo inmenso de Familia</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-5a')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 5B: Amigos Pirámide (Lexfer19_AmigosPiramide_20230212.jpg) -->
+        <div class="flip-scene">
+          <div id="card-5b" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-5b')">
+              <img src="assets/fotos/Lexfer19_AmigosPiramide_20230212.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-5b"
+                  src="assets/fotos/Lexfer19_AmigosPiramide_20230212.jpg" 
+                  alt="Lexfer con sus amigos en Pirámide" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-5b', 'Amigos de la Pirámide &bull; 12 de Febrero de 2023', 'La lealtad, las risas y la complicidad de los amigos de siempre: compañeros de vida que celebran cada victoria a tu lado.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Amigos en Pirámide &bull; 2023"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-5b')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 5B -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-5b')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2023 &bull; HERMANDAD Y AMISTAD</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XIII</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Los éxitos se multiplican cuando los compartes con quienes han caminado a tu lado desde siempre. Amigos de tu oficina de Pirámide,quienes trabajan contigo y te han visto crecer, esta hermandad sincera celebra cada paso firme que das en la vida."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Amigos que son como hermanos </p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-5b')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================== -->
+    <!-- CAPÍTULO 6: GRADUACIÓN UNIVERSIDAD (ÉXITO ACADÉMICO, AMOR & FAMILIA) -->
+    <!-- ========================================================================== -->
+    <section id="capitulo-6" class="timeline-node relative glass-card p-4 sm:p-7 rounded-3xl border border-slate-800/80 shadow-2xl space-y-5">
+      <div class="max-w-2xl space-y-1.5">
+        <div class="inline-block px-2.5 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          Capítulo VI &bull; Triunfo Académico &bull; 2025
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white">Graduacion Universidad</h2>
+        <p class="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+          La culminación triunfal de años de constancia, noches de estudio y una determinación inquebrantable. Verte recibir tu título universitario, rodeado del amor de Raquel y el orgullo de toda la familia, es el reflejo de un hombre que forja su destino con excelencia.
+        </p>
+        <div class="flex items-center gap-2 text-xs text-amber-200/80 pt-1 flex-wrap">
+          <span class="flex items-center gap-1"><i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-amber-400"></i> Grado Universitario</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="heart" class="w-3.5 h-3.5 text-amber-400"></i> Junto a Raquel</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5 text-amber-400"></i> Orgullo de Mamá y Papá &amp; Familia</span>
+        </div>
+      </div>
+
+      <!-- Grilla con 4 Tarjetas Flip 3D (Graduación, Raquel, Papá & Celebración) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-5 md:gap-6">
+        
+        <!-- Tarjeta 6A: Lexfer18_Graduacion_Univ_2025 -->
+        <div class="flip-scene">
+          <div id="card-6a" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-6a')">
+              <img src="assets/fotos/Lexfer18_Graduacion_Univ_2025.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-6a"
+                  src="assets/fotos/Lexfer18_Graduacion_Univ_2025.jpg" 
+                  alt="Lexfer graduación universitaria con título y toga" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-6a', 'La Cima Universitaria (2025)', 'La conquista de tu título profesional: años de dedicación, entrega y pasión académica recompensados con el más alto honor.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Título Universitario &bull; 2025"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-6a')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 6A -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-6a')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2025 &bull; TÍTULO UNIVERSITARIO</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XIV</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Verte con tu toga, tu birrete y tu título en mano es la recompensa más hermosa a tu perseverancia y esfuerzo inquebrantable. Tu familia entera celebra este hito con el pecho lleno de orgullo."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Orgullo de toda tu Familia</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-6a')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 6B: Lexfer18-Raquel -->
+        <div class="flip-scene">
+          <div id="card-6b" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-6b')">
+              <img src="assets/fotos/Lexfer18-Raquel.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-6b"
+                  src="assets/fotos/Lexfer18-Raquel.jpg" 
+                  alt="Lexfer y Raquel celebrando la graduación" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-6b', 'Amor y Complicidad en el Triunfo', 'Compartiendo la gloria de la graduación con quien camina a tu lado día a día con amor sincero, fe y devoción.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Junto a Raquel &bull; Triunfo Compartido"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-6b')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 6B -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-6b')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">AMOR &bull; COMPAÑERA DE VIDA</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XV</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Cada gran logro se hace aún más luminoso cuando se comparte con quien camina a tu lado con amor sincero y lealtad. Celebrar este día junto a Raquel es el reflejo de un camino bendecido."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— El amor que impulsa cada paso</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-6b')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 6C: Lexfer20-Raquel_Papa_Y_Yo -->
+        <div class="flip-scene">
+          <div id="card-6c" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-6c')">
+              <img src="assets/fotos/Lexfer20-Raquel_Papa_Y_Yo.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-6c"
+                  src="assets/fotos/Lexfer20-Raquel_Papa_Y_Yo.jpg" 
+                  alt="Lexfer, Raquel, Papá y Familia celebrando el grado universitario" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-6c', 'Orgullo de Papá y Celebración Familiar', 'La alegría inmensa en los ojos de papá y de la familia al ver consolidado un gran sueño de superación.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Orgullo de Papá &bull; Familia"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-6c')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 6C -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-6c')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">FAMILIA &bull; LEGADO DE AMOR</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XVI</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "La mirada de orgullo de tu Papá, de tu mamá y de toda la familia entera lo dice todo: eres el fruto de valores sembrados con cariño y regados con tu propia disciplina. Qué bendición tan grande vivir este triunfo juntos."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Raíces y alas firmes</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-6c')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 6D: Lexfer18_Raquel_Universidad_Celebracion -->
+        <div class="flip-scene">
+          <div id="card-6d" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-6d')">
+              <img src="assets/fotos/Lexfer18_Raquel_Universidad_Celebracion.png" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-6d"
+                  src="assets/fotos/Lexfer18_Raquel_Universidad_Celebracion.png" 
+                  alt="Celebración y fiesta universitaria con Raquel" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-6d', 'Celebración y Brindis de Grado', 'Risas, abrazos y la felicidad desbordante de saber que el futuro profesional y personal te pertenece.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Celebración &bull; Nuevos Horizontes"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-6d')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 6D -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-6d')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">CELEBRACIÓN &bull; ÉXITO TOTAL</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XVII</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "¡Misión cumplida con honores! Que la alegría de este brindis sea solo el prólogo de los innumerables triunfos profesionales y personales que te esperan. ¡Felicidades por tu graduación!"
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Brindamos por tu grandeza</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-6d')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================== -->
+    <!-- CAPÍTULO 7: LA BODA (VIDEO CINEMATOGRÁFICO Y ALIANZA DE AMOR) -->
+    <!-- ========================================================================== -->
+    <section id="capitulo-7" class="timeline-node relative glass-card p-4 sm:p-8 rounded-3xl border border-amber-500/40 shadow-2xl space-y-6">
+      
+      <div class="max-w-3xl space-y-2">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30">
+          <i data-lucide="heart" class="w-3.5 h-3.5 fill-amber-400/30"></i>
+          Capítulo VII &bull; Alianza Sagrada &bull; Nuestra Boda
+        </div>
+        <h2 class="font-serif text-2xl sm:text-4xl font-bold text-white">
+          El Sagrado Vínculo: Su Boda
+        </h2>
+        <p class="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
+          El día en que pronunciaron sus votos matrimoniales no solo unieron sus vidas, sino que confirmaron la belleza de amar con respeto, complicidad y fe. Este video y estas fotos atesoran la mirada ilusionada, la bendición familiar y la promesa solemne de caminar juntos hacia un futuro luminoso.
+        </p>
+        <div class="flex items-center gap-2 text-xs text-amber-200/80 pt-1 flex-wrap">
+          <span class="flex items-center gap-1"><i data-lucide="film" class="w-3.5 h-3.5 text-amber-400"></i> Video de la Boda</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="camera" class="w-3.5 h-3.5 text-amber-400"></i> Álbum Nupcial</span>
+          <span>&bull;</span>
+          <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i> 24 de Agosto de 2025</span>
+        </div>
+      </div>
+
+      <!-- Contenedor del Reproductor de Video Cinematográfico -->
+      <div id="weddingVideoContainer" class="video-wrapper video-glow-ring max-w-4xl mx-auto relative group overflow-hidden rounded-2xl bg-slate-950 border border-amber-500/30">
+        
+        <!-- Elemento de Video HTML5 -->
+        <div class="relative aspect-video w-full bg-black/90 flex items-center justify-center">
+          <video 
+            id="weddingVideo" 
+            class="w-full h-full object-contain cursor-pointer"
+            src="assets/video/boda.mp4"
+            poster="assets/fotos/boda_portada.png"
+            playsinline 
+            preload="auto"
+            onclick="toggleWeddingVideo()"
+          >
+            <source src="assets/video/boda.mp4" type="video/mp4">
+            <source src="/assets/video/boda.mp4" type="video/mp4">
+            <source src="public/assets/video/boda.mp4" type="video/mp4">
+            <source src="assets/video/lexfer_boda.mp4" type="video/mp4">
+            <source src="/assets/video/lexfer_boda.mp4" type="video/mp4">
+            <source src="public/assets/video/lexfer_boda.mp4" type="video/mp4">
+            <source src="assets/video/Lexfer_boda.mp4" type="video/mp4">
+            <source src="/assets/video/Lexfer_boda.mp4" type="video/mp4">
+            Tu navegador no soporta el formato de video.
+          </video>
+
+          <!-- Mini barra de avance en el borde inferior del video -->
+          <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-black/60 z-10 pointer-events-none">
+            <div id="videoOverlayProgressBar" class="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 w-0 transition-all duration-75 shadow-[0_0_8px_rgba(245,158,11,0.8)]"></div>
+          </div>
+
+          <!-- Overlay con botón Play estilizado sobre el video -->
+          <div 
+            id="videoPlayOverlay" 
+            onclick="toggleWeddingVideo()"
+            class="absolute inset-0 bg-slate-950/60 backdrop-blur-[2px] flex flex-col items-center justify-center gap-3 transition-opacity duration-300 cursor-pointer z-20 group"
+          >
+            <div id="overlayPlayBtn" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 flex items-center justify-center shadow-2xl group-hover:scale-110 active:scale-95 transition-all shadow-amber-500/30">
+              <span id="overlayPlayIconContainer" class="flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 sm:w-10 sm:h-10 ml-1 fill-slate-950"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+              </span>
+            </div>
+            <div class="text-center px-4">
+              <p class="font-serif text-lg sm:text-2xl font-bold text-white tracking-wide drop-shadow">El Día Inolvidable de su Boda</p>
+              <p class="text-xs sm:text-sm text-amber-200/90 font-light drop-shadow">Haz clic para reproducir los recuerdos de su unión</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Control Personalizada -->
+        <div class="p-3 sm:p-4 bg-slate-950/95 border-t border-slate-800 space-y-3 relative z-30">
+          
+          <!-- SECCIÓN PROMINENTE: BARRA DE AVANCE Y LÍNEA DE TIEMPO DEL VIDEO -->
+          <div class="space-y-1.5 bg-slate-900/80 p-2.5 sm:p-3 rounded-2xl border border-amber-500/30 shadow-lg">
+            <!-- Fila superior de información: Título de barra de avance y tiempo transcurrido -->
+            <div class="flex items-center justify-between text-xs px-1 select-none">
+              <span class="flex items-center gap-2 text-amber-300 font-semibold text-xs sm:text-sm">
+                <span class="flex h-2 w-2 relative">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                <span>Barra de Avance</span>
+                <span class="text-[10px] sm:text-xs text-slate-400 font-normal hidden sm:inline">&bull; Desliza o haz clic para adelantar / retroceder</span>
+              </span>
+
+              <div class="flex items-center gap-1.5 font-mono text-xs sm:text-sm text-amber-300 bg-slate-950 px-2.5 py-0.5 rounded-lg border border-amber-500/20 shadow-inner">
+                <span id="videoCurrentTimeDisplay" class="font-bold">0:00</span>
+                <span class="text-slate-500 font-normal">/</span>
+                <span id="videoDurationDisplay" class="text-slate-300">0:20</span>
+              </div>
+            </div>
+
+            <!-- Contenedor del Scrubber Interactivo -->
+            <div 
+              id="videoProgressContainer" 
+              class="relative w-full h-7 flex items-center cursor-pointer select-none group py-1"
+              title="Haz clic o arrastra para moverte en el video"
+            >
+              <!-- Pista de Fondo de Alta Visibilidad -->
+              <div class="w-full h-3 rounded-full bg-slate-950 border border-slate-700/80 shadow-inner overflow-hidden relative">
+                <!-- Barra de Carga / Buffer -->
+                <div id="videoBufferBar" class="absolute top-0 bottom-0 left-0 bg-slate-800/80 w-0 transition-all duration-300"></div>
+                <!-- Barra de Progreso Relleno Dorado Brillante -->
+                <div id="videoProgressBar" class="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 w-0 h-full rounded-full transition-all duration-75 shadow-[0_0_12px_rgba(245,158,11,0.7)]"></div>
+              </div>
+
+              <!-- Indicador Deslizador (Thumb / Cabezal de aguja) Visible SIEMPRE -->
+              <div 
+                id="videoProgressThumb" 
+                class="absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 border-2 border-slate-950 shadow-lg shadow-amber-500/60 group-hover:scale-125 transition-transform duration-75 pointer-events-none z-20 flex items-center justify-center ring-2 ring-amber-400/50"
+              >
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-950"></div>
+              </div>
+
+              <!-- Tooltip flotante con minuto/segundo en Hover -->
+              <div 
+                id="videoSeekTooltip" 
+                class="absolute -top-7 -translate-x-1/2 bg-slate-950 text-amber-300 font-mono text-[10px] px-2 py-0.5 rounded border border-amber-500/50 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md z-30 whitespace-nowrap hidden sm:block"
+              >
+                0:00
+              </div>
+
+              <!-- Input Slider Transparente para Arrastre Preciso y Soporte Táctil -->
+              <input 
+                type="range" 
+                id="videoSeekInput" 
+                min="0" 
+                max="100" 
+                value="0" 
+                step="0.05"
+                oninput="onVideoSeekInput(this.value)"
+                onchange="onVideoSeekChange(this.value)"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
+                aria-label="Barra de avance del video de la boda"
+                title="Desliza para moverte por el video"
+              >
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            
+            <!-- Grupo Izquierdo: Play/Pause, Rewind/Forward, Tiempo y Estado -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+              <!-- Botón Play/Pause Principal -->
+              <button 
+                type="button" 
+                id="videoPlayBtn" 
+                onclick="toggleWeddingVideo()" 
+                class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-slate-950 flex items-center justify-center transition-all shadow border border-amber-500/40 hover:scale-105 active:scale-95 flex-shrink-0"
+                aria-label="Reproducir o pausar video"
+                title="Reproducir / Pausar (Espacio)"
+              >
+                <span id="videoPlayIconContainer" class="flex items-center justify-center pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 ml-0.5"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                </span>
+              </button>
+
+              <!-- Botones de Salto 10s -->
+              <button 
+                type="button" 
+                onclick="skipWeddingVideo(-10)" 
+                class="hidden sm:inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-400 hover:border-amber-500/40 transition-colors text-xs"
+                title="Retroceder 10 segundos"
+              >
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              </button>
+              <button 
+                type="button" 
+                onclick="skipWeddingVideo(10)" 
+                class="hidden sm:inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-400 hover:border-amber-500/40 transition-colors text-xs"
+                title="Adelantar 10 segundos"
+              >
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <!-- Badge de Estado de Reproducción -->
+              <span id="videoStatusBadge" class="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-400 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-800">
+                <span id="videoStatusDot" class="w-2 h-2 rounded-full bg-slate-500 transition-colors"></span>
+                <span id="videoStatusText">Pausado</span>
+              </span>
+            </div>
+
+            <!-- Grupo Derecho: Control de Volumen + Controles Nativos + Subir Video + Pantalla Completa -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+              
+              <!-- Control de Volumen del Video con Slider Deslizante -->
+              <div class="flex items-center gap-1.5 sm:gap-2 bg-slate-900/95 px-2.5 py-1 rounded-full border border-slate-800 shadow-inner">
+                <button 
+                  type="button" 
+                  id="videoMuteBtn" 
+                  onclick="toggleVideoMute()" 
+                  class="w-7 h-7 rounded-full text-slate-300 hover:text-amber-400 flex items-center justify-center transition-colors hover:scale-105 active:scale-95"
+                  aria-label="Silenciar o activar sonido"
+                  title="Silenciar / Activar sonido"
+                >
+                  <span id="videoMuteIconContainer" class="flex items-center justify-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                  </span>
+                </button>
+
+                <input 
+                  type="range" 
+                  id="videoVolumeSlider" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value="0.85" 
+                  oninput="setWeddingVideoVolume(this.value)"
+                  class="w-16 sm:w-24 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+                  aria-label="Volumen del video de la boda"
+                  title="Desliza para ajustar volumen"
+                >
+
+                <span id="videoVolumeLabel" class="text-[10px] sm:text-xs font-mono text-amber-300 min-w-[28px] text-right font-medium">
+                  85%
+                </span>
+              </div>
+
+              <!-- Alternar Controles Nativos del Navegador -->
+              <button 
+                type="button" 
+                id="videoToggleNativeBtn" 
+                onclick="toggleNativeVideoControls()" 
+                class="px-2.5 py-1 rounded-full text-[11px] bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-400 hover:border-amber-500/40 transition-colors flex items-center gap-1 shadow hover:scale-105 active:scale-95" 
+                title="Mostrar u ocultar la barra de controles nativa del navegador"
+              >
+                <i data-lucide="sliders-horizontal" class="w-3 h-3"></i>
+                <span class="hidden md:inline">Controles Nativos</span>
+              </button>
+
+              <!-- Cargar video local opcional -->
+              <label class="cursor-pointer px-2.5 py-1 rounded-full text-[11px] bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-300 hover:border-amber-500/30 transition-all flex items-center gap-1 shadow hover:scale-105 active:scale-95" title="Opcional: Si deseas probar temporalmente otro archivo MP4 desde tu computadora">
+                <i data-lucide="folder-sync" class="w-3 h-3 text-amber-400"></i>
+                <span class="hidden sm:inline">Probar otro video (opcional)</span>
+                <span class="sm:hidden">Otro video</span>
+                <input type="file" id="videoFileInput" accept="video/*" class="hidden">
+              </label>
+
+              <!-- Pantalla Completa -->
+              <button 
+                type="button" 
+                id="videoFullscreenBtn" 
+                onclick="toggleVideoFullscreen()" 
+                class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-400 flex items-center justify-center transition-colors hover:scale-105 active:scale-95 shadow"
+                aria-label="Pantalla completa"
+                title="Pantalla completa"
+              >
+                <i data-lucide="maximize" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Nota informativa de archivo permanente y automático -->
+          <div class="pt-2 flex flex-wrap items-center justify-between text-[11px] text-slate-400 border-t border-slate-900/90 gap-2">
+            <div id="videoSourceBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 font-mono text-[11px] shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="font-sans font-medium text-emerald-200">Carga Automática Directa:</span>
+              <code class="text-emerald-300 font-bold">public/assets/video/boda.mp4</code>
+              <span class="text-emerald-400/80 font-sans text-[10px] hidden md:inline">&bull; No requiere subir archivo</span>
+            </div>
+            <span class="text-slate-400">Audio integrado &bull; Control de volumen activo &bull; 720p HD</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Grilla de Fotos de la Boda (Fotos Reales 3D Flip) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6 max-w-4xl mx-auto pt-2">
+        
+        <!-- Tarjeta 7A: Lexfer20-20250824-Matrimonio -->
+        <div class="flip-scene">
+          <div id="card-7a" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-7a')">
+              <img src="assets/fotos/Lexfer20-20250824-Matrimonio.jpg" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-7a"
+                  src="assets/fotos/Lexfer20-20250824-Matrimonio.jpg" 
+                  alt="Lexfer y Raquel en su boda 24 de Agosto de 2025" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-7a', 'El Sagrado Matrimonio &bull; 24 de Agosto de 2025', 'El día sublime en que unieron sus vidas con fe, amor y la bendición de toda la familia.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"24 de Agosto de 2025 &bull; Su Boda"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-7a')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 7A -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-7a')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">2025 &bull; ALIANZA SAGRADA</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XVIII</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "El día más hermoso, donde dos almas nobles unieron sus caminos bajo una sola promesa de amor, lealtad y respeto mutuo. Que la gracia divina colme su hogar de bendiciones eternas."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Bendición y Amor Eterno</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-7a')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta 7B: Lexfer20_Raquel_Matrimonio2 -->
+        <div class="flip-scene">
+          <div id="card-7b" class="flip-card">
+            
+            <div class="flip-face photo-frame glass-card shadow-xl relative group cursor-pointer" onclick="toggleFlip('card-7b')">
+              <img src="assets/fotos/Lexfer20_Raquel_Matrimonio2.png" alt="" class="photo-ambient-bg" aria-hidden="true">
+              <div class="absolute inset-0 bg-slate-950/30 pointer-events-none z-[5]"></div>
+
+              <div class="photo-container-inner">
+                <img 
+                  id="img-node-7b"
+                  src="assets/fotos/Lexfer20_Raquel_Matrimonio2.png" 
+                  alt="Retrato de novios de Lexfer y Raquel" 
+                  class="photo-main-img smooth-image"
+                  loading="lazy"
+                  onload="this.classList.add('loaded')"
+                >
+              </div>
+
+              <button 
+                type="button"
+                onclick="event.stopPropagation(); openLightboxFromImage('img-node-7b', 'Alianza de Amor y Complicidad', 'Dos miradas que se encontraron para construir juntos un hogar cimentado en la fe, la ternura y la comprensión.')" 
+                class="absolute top-2.5 right-2.5 p-2 rounded-full bg-slate-950/85 text-white hover:text-amber-400 hover:scale-110 active:scale-95 backdrop-blur-md transition-all shadow-md z-20 border border-slate-700"
+                title="Ampliar foto"
+                aria-label="Ampliar foto"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-20 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 shadow-lg">
+                <span class="text-[11px] text-slate-200/95 italic truncate drop-shadow font-medium">"Lexfer &amp; Raquel &bull; Amor Infinito"</span>
+                <button 
+                  type="button"
+                  onclick="event.stopPropagation(); toggleFlip('card-7b')" 
+                  class="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-950 hover:bg-yellow-400 font-bold shadow-md transition-all text-xs"
+                >
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                  Dedicatoria
+                </button>
+              </div>
+            </div>
+
+            <!-- Reverso 7B -->
+            <div class="flip-face flip-face-back p-5 flex flex-col justify-between border-4 border-[#e7ded1] rounded-2xl cursor-pointer" onclick="toggleFlip('card-7b')">
+              <div class="flex items-start justify-between border-b border-stone-300 pb-1.5">
+                <span class="text-[10px] font-sans tracking-widest uppercase text-stone-500 font-semibold">AMOR &bull; PACTO DE VIDA</span>
+                <span class="w-6 h-8 border-2 border-dashed border-amber-700/40 rounded bg-amber-50 flex items-center justify-center text-amber-800 text-[8px] font-bold">XIX</span>
+              </div>
+              <div class="my-auto py-2 flex flex-col justify-center">
+                <p class="font-handwritten text-lg sm:text-2xl text-stone-900 leading-snug">
+                  "Verlos sonreír juntos con esa serenidad y dulzura nos confirma que el verdadero amor edifica, enaltece y perdura. Cuiden siempre este tesoro sagrado que Dios ha puesto en sus manos."
+                </p>
+                <p class="text-right font-handwritten text-sm sm:text-base text-amber-900 mt-2 font-semibold">— Sus Familias que los aman</p>
+              </div>
+              <div class="pt-1 border-t border-stone-200 flex justify-end">
+                <button type="button" onclick="event.stopPropagation(); toggleFlip('card-7b')" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-200 text-stone-800 hover:bg-stone-300 text-xs font-semibold">
+                  <i data-lucide="image" class="w-3 h-3"></i> Volver a la foto
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tarjeta postal de bendición matrimonial -->
+      <div class="max-w-2xl mx-auto glass-card p-5 sm:p-7 rounded-2xl border border-amber-500/30 relative text-center space-y-3">
+        <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-500/10 text-amber-400 mb-1 border border-amber-500/20">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <h3 class="font-serif text-xl sm:text-2xl font-bold text-white">Bendición para su Matrimonio</h3>
+        <p class="font-handwritten text-lg sm:text-2xl text-amber-200/95 leading-relaxed max-w-xl mx-auto">
+          "Príncipe, verte dar este paso sagrado de unión matrimonial llena nuestro corazón de una dicha inefable. Que el amor sincero, la paciencia y el respeto mutuo sean siempre la roca que sostenga su hogar."
+        </p>
+        <p class="font-serif text-xs sm:text-sm text-slate-400 italic">— Con todo el Amor y Bendición Siempre Que Dios y la Virgen los Proteja con su manto Sagrado</p>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================== -->
+    <!-- CAPÍTULO VII / VIII: COMPARADOR 1994 vs 2026 (32 AÑOS DE TRAYECTORIA)      -->
+    <!-- ========================================================================== -->
+    <section id="capitulo-8" class="timeline-node relative py-4 sm:py-8 space-y-5">
+      <span id="capitulo-comparador" class="sr-only"></span>
+      <div class="text-center max-w-xl mx-auto mb-3 space-y-1 px-2">
+        <div class="inline-block px-2.5 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          Capítulo VII &bull; COMPARADOR DE VIDA &bull; 1994 &rarr; 2026
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white">32 Años de Trayectoria</h2>
+        <p class="text-slate-300 text-xs sm:text-sm">
+          Desliza la barra interactiva para contrastar tu evolución: desde aquel primer amanecer en 1994 hasta el gran hombre y profesional de hoy en 2026.
+        </p>
+      </div>
+
+      <div class="max-w-xl mx-auto glass-card p-3 sm:p-5 rounded-3xl shadow-2xl border border-amber-500/30 space-y-4">
+        
+        <!-- Contenedor del Comparador con 2 Fotos (1994 vs 2026) -->
+        <div id="compareWrapper" class="compare-container rounded-2xl aspect-[3/4] max-w-md sm:max-w-lg mx-auto bg-slate-950 border border-amber-500/30 shadow-2xl relative overflow-hidden select-none cursor-ew-resize">
+          
+          <!-- Capa Base (Fondo): Hoy - Graduación Universidad 2026 (Lexfer17_Graduacion_Universidad) -->
+          <img 
+            id="compareImgHoy"
+            src="assets/fotos/Lexfer17_Graduacion_Universidad.jpeg" 
+            alt="Hoy - Graduación Universidad (32 Años)" 
+            class="smooth-image absolute inset-0 w-full h-full object-cover object-top pointer-events-none select-none transition-opacity"
+            onload="this.classList.add('loaded')"
+            onerror="if (!this.src.endsWith('.jpg')) { this.src = 'assets/fotos/Lexfer17_Graduacion_Universidad.jpg'; } else if (!this.src.includes('Univ_2025')) { this.src = 'assets/fotos/Lexfer18_Graduacion_Univ_2025.jpg'; }"
+          >
+
+          <!-- Capa Superpuesta: Inicios - Lexfer Bebé 1994 -->
+          <div id="compareOverlay" class="compare-overlay absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden" style="clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%); -webkit-clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);">
+            <img 
+              id="compareOverlayImg"
+              src="assets/fotos/Lexfer1_bebecito2.jpg" 
+              alt="1994 - Inicios" 
+              class="compare-overlay-img smooth-image absolute inset-0 w-full h-full object-cover object-top pointer-events-none select-none"
+              onload="this.classList.add('loaded')"
+            >
+          </div>
+
+          <!-- Badges de Época flotantes con backdrop blur -->
+          <span id="badgeInicios" class="absolute bottom-3 left-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-slate-950/90 text-amber-400 px-2.5 py-1 rounded-full border border-amber-500/40 backdrop-blur-md shadow-lg z-20 pointer-events-none transition-all">
+            1994 &bull; Inicios
+          </span>
+
+          <span id="badgeHoy" class="absolute bottom-3 right-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-slate-950/90 text-amber-400 px-2.5 py-1 rounded-full border border-amber-500/40 backdrop-blur-md shadow-lg z-20 pointer-events-none transition-all">
+            2026 &bull; 32 Años
+          </span>
+
+          <!-- Divisor interactivo único -->
+          <div id="compareHandle" class="absolute top-0 bottom-0 z-30 cursor-ew-resize group select-none" style="left: 50%;">
+            <!-- Hitbox táctil expandida para arrastre ultrasensible en móviles y ratón -->
+            <div class="absolute inset-y-0 -left-8 w-16 cursor-ew-resize"></div>
+            <!-- Línea divisoria dorada luminosa -->
+            <div class="absolute inset-y-0 -left-[1.5px] w-[3px] bg-gradient-to-b from-amber-300 via-amber-400 to-yellow-500 shadow-[0_0_15px_rgba(251,191,36,0.95)] pointer-events-none"></div>
+            <!-- Botón circular central -->
+            <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 flex items-center justify-center shadow-2xl border-2 border-slate-950 group-hover:scale-110 active:scale-95 transition-transform pointer-events-none" title="Deslizar para comparar">
+              <i data-lucide="move-horizontal" class="w-4 h-4 pointer-events-none"></i>
+            </div>
+            <!-- Etiqueta superior -->
+            <span class="absolute top-2.5 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-slate-950/95 text-[10px] font-mono font-bold text-amber-300 border border-amber-500/40 whitespace-nowrap pointer-events-none shadow-md">
+              1994 | 2026
+            </span>
+          </div>
+
+        </div>
+
+        <!-- Acciones rápidas (Ver 1994, Centrar 50%, Ver 2026, Ampliar) -->
+        <div class="flex items-center justify-center gap-2 pt-1 text-[11px] sm:text-xs flex-wrap">
+          <span class="text-slate-400 font-medium">Accesos rápidos:</span>
+          <button 
+            type="button" 
+            onclick="setComparatorPercent(100)" 
+            class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/40 transition-colors cursor-pointer font-medium"
+          >
+            Ver 1994 (Inicios)
+          </button>
+          <button 
+            type="button" 
+            onclick="setComparatorPercent(50)" 
+            class="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition-colors cursor-pointer font-medium"
+          >
+            Centrar 50/50
+          </button>
+          <button 
+            type="button" 
+            onclick="setComparatorPercent(0)" 
+            class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-800 hover:border-amber-500/40 transition-colors cursor-pointer font-medium"
+          >
+            Ver 2026 (Graduación)
+          </button>
+          <button 
+            type="button" 
+            onclick="openLightboxFromImage('assets/fotos/Lexfer17_Graduacion_Universidad.jpeg', 'Graduación Universidad • 32 Años', 'Lexfer con toga, birrete y medalla de Ingeniero en Información, culminando su meta universitaria con orgullo y alegría.')"
+            class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 hover:border-amber-500/40 transition-colors cursor-pointer font-medium inline-flex items-center gap-1"
+            title="Ampliar foto de graduación en tamaño completo"
+          >
+            <i data-lucide="zoom-in" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>Ampliar Foto</span>
+          </button>
+        </div>
+
+        <!-- Control deslizante de rango inferior -->
+        <div class="bg-slate-900/90 border border-amber-500/25 rounded-2xl p-3 sm:p-4 space-y-2 shadow-lg">
+          <div class="flex items-center justify-between text-[11px] sm:text-xs">
+            <span class="flex items-center gap-1.5 font-semibold text-amber-300">
+              <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i>
+              <span>Control Deslizante: 1994 (Inicios) &harr; 2026 (Universidad)</span>
+            </span>
+            <span id="sliderVal" class="font-mono font-bold text-amber-400 bg-slate-950/90 px-2 py-0.5 rounded border border-amber-500/30">50%</span>
+          </div>
+          <input 
+            type="range" 
+            id="rangeSlider" 
+            min="0" 
+            max="100" 
+            value="50" 
+            step="0.5"
+            class="w-full accent-amber-400 h-2 bg-slate-950 rounded-lg cursor-pointer transition-opacity"
+            aria-label="Control deslizante 1994 vs 2026"
+          >
+          <p class="text-center text-[10px] sm:text-[11px] text-slate-400 flex items-center justify-center gap-1.5 pt-0.5 font-medium">
+            <i data-lucide="sparkles" class="w-3 h-3 text-amber-400"></i> Arrastra la barra horizontal sobre la foto o desliza el control para comparar tu trayectoria
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================== -->
+    <!-- BÓVEDA FINAL / CARTA DE LOS 32 AÑOS                                         -->
+    <!-- ========================================================================== -->
+    <section id="vault" class="timeline-node relative py-4 sm:py-8 text-center">
+      <div class="max-w-2xl mx-auto glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-9 border border-amber-500/30 relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+          <i data-lucide="heart" class="w-6 h-6 sm:w-8 sm:h-8 fill-amber-400/20"></i>
+        </div>
+
+        <div class="text-[10px] sm:text-xs font-semibold text-amber-400 tracking-widest uppercase mb-1.5">
+          20 de Octubre &bull; Feliz Cumpleaños #32
+        </div>
+
+        <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
+          Donde Nace tu Fuerza
+        </h2>
+        
+        <p class="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed mb-5 sm:mb-6 px-1">
+          Cumplir 32 años es celebrar la madurez, la experiencia ganada, la solidez de tu matrimonio y todo el futuro brillante que tienes por delante. Cuando el camino se vuelva exigente o el mundo sea ruidoso, regresa a esta bitácora: aquí están tus raíces, el amor incondicional de tu familia y el lugar exacto donde nace tu fuerza.
+        </p>
+
+        <!-- Botón Confeti -->
+        <button type="button" id="confettiBtn" class="w-full sm:w-auto px-7 sm:px-8 py-3.5 rounded-full bg-gradient-to-r from-[#607044] via-[#6d7e4e] to-[#788a57] text-white font-bold text-sm border border-[#879965]/40 shadow-xl shadow-[#46532f]/35 hover:from-[#57663d] hover:to-[#6d7e4e] hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-[#e2ebd0]"></i>
+          ¡Felices 32 Años, Lexfer!
+        </button>
+
+        <div class="mt-5 pt-4 border-t border-slate-800 text-xs text-slate-500 font-serif italic">
+          Con todo nuestro amor incondicional &bull; 20 de Octubre
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL / LIGHTBOX -->
+  <div id="lightboxModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-3 sm:p-5 overflow-y-auto" role="dialog" aria-modal="true">
+    
+    <button 
+      type="button"
+      id="lightboxCloseBtnTop"
+      onclick="closeLightbox()" 
+      class="fixed top-3 right-3 sm:top-5 sm:right-5 z-50 flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-amber-500/40 text-amber-300 hover:bg-amber-500 hover:text-slate-950 shadow-2xl transition-all cursor-pointer font-medium text-xs sm:text-sm"
+      aria-label="Cerrar visor"
+    >
+      <i data-lucide="x" class="w-4 h-4"></i>
+      <span>Cerrar</span>
+      <kbd class="hidden sm:inline-block text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700">Esc</kbd>
+    </button>
+
+    <div id="lightboxCard" class="max-w-4xl w-full glass-card rounded-2xl overflow-hidden p-3 sm:p-4 shadow-2xl space-y-2.5 relative z-10 border border-slate-800 my-auto">
+      <div class="relative max-h-[72vh] flex items-center justify-center bg-black/60 rounded-xl overflow-hidden">
+        <img id="lightboxImg" src="" alt="Recuerdo ampliado" class="max-h-[72vh] w-auto max-w-full object-contain rounded-lg">
+      </div>
+      
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pt-1">
+        <div class="space-y-0.5">
+          <h3 id="lightboxTitle" class="font-serif text-lg sm:text-xl font-bold text-white"></h3>
+          <p id="lightboxDesc" class="text-slate-300 text-xs sm:text-sm"></p>
+        </div>
+        <button 
+          type="button"
+          onclick="closeLightbox()" 
+          class="flex-shrink-0 px-3.5 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-colors font-medium text-xs flex items-center gap-1.5 border border-amber-500/30"
+        >
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          Volver a la bitácora
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="py-6 text-center text-xs text-slate-600 border-t border-slate-900 px-4">
+    Hecho con mucho amor y cariño para mi Principe &bull; Recuerdos que perduran para Siempre
+  </footer>
+
+  <!-- LÓGICA JAVASCRIPT MODULAR -->
+  <script src="js/main.js" defer></script>
+</body>
+</html>
+
+
