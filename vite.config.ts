@@ -53,7 +53,7 @@ function uploadPhotoPlugin(): Plugin {
 
 export default defineConfig(() => {
   return {
-    base: '/donde-nace-tu-fuerza/',
+    
     plugins: [react(), tailwindcss(), uploadPhotoPlugin()],
     resolve: {
       alias: {
